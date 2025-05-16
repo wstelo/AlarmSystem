@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public class AlarmSystem : MonoBehaviour
+public class WarningSignal : MonoBehaviour
 {
     private AudioSource _audioSource;
     private float _volumeStep = 0.1f;
@@ -17,27 +17,23 @@ public class AlarmSystem : MonoBehaviour
         _audioSource.volume = 0.1f;
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void EnableSignal()
     {
-        if (other.TryGetComponent<Mover>(out _))
-        {
-            if(_coroutine != null)
-            {
-                StopCoroutine(_coroutine);
-            }
-
-            _audioSource.Play();
-            _coroutine = StartCoroutine(IncreaseVolume());
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.TryGetComponent<Mover>(out _))
+        if (_coroutine != null)
         {
             StopCoroutine(_coroutine);
-            _coroutine = StartCoroutine(DecreaseVolume());
         }
+
+        _audioSource.Play();
+        _coroutine = StartCoroutine(IncreaseVolume());
+    }
+
+    public void DisableSignal()
+    {
+
+        StopCoroutine(_coroutine);
+        _coroutine = StartCoroutine(DecreaseVolume());
+
     }
 
     private IEnumerator DecreaseVolume()
